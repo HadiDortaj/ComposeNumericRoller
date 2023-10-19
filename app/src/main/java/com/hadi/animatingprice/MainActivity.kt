@@ -18,9 +18,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hadi.animatingprice.ui.theme.AnimatingPriceTheme
 import kotlinx.coroutines.delay
@@ -36,12 +35,11 @@ class MainActivity : ComponentActivity() {
                 }
 
                 LaunchedEffect(key1 = Unit) {
-                    delay(3000)
+                    delay(1000)
+                    price = 29
+                    delay(1000)
+                    price = 329
 
-                    price = 93
-
-                    delay(3000)
-                    price = 423
 
                 }
                 Greeting(price)
@@ -63,14 +61,12 @@ steps:
 
 @Composable
 fun Greeting(price: Int) {
-
     val priceCharacters = generateCharactersArray(price)
-
     Row(
         modifier = Modifier
     ) {
         priceCharacters.forEachIndexed { index, character ->
-            key(index, character) {
+            key(index) {
                 if (character != null) {
                     Log.i("HADI", "index: $index $character")
                     CharacterColumn(character)
@@ -84,26 +80,18 @@ fun Greeting(price: Int) {
 @Composable
 private fun CharacterColumn(character: Char) {
     val lazyListState = rememberLazyListState(initialFirstVisibleItemIndex = 0)
-    var lazyColumnHeight by remember {
-        mutableStateOf(Dp.Unspecified)
-    }
-    val density = LocalDensity.current
     LaunchedEffect(key1 = character) {
         lazyListState.animateScrollToItem(getCharacterIndex(character))
     }
     LazyColumn(
-        modifier = Modifier.height(lazyColumnHeight),
+        modifier = Modifier.height(50.dp),
         state = lazyListState,
         userScrollEnabled = false
     ) {
         items(items = getItems()) { item ->
             Text(
                 text = item, fontSize = 40.sp,
-                modifier = Modifier.onSizeChanged {
-                    lazyColumnHeight = with(density) {
-                        it.height.toDp()
-                    }
-                }
+                modifier = Modifier
             )
         }
     }
