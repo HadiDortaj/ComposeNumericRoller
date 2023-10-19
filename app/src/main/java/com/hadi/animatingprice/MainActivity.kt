@@ -18,7 +18,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hadi.animatingprice.ui.theme.AnimatingPriceTheme
@@ -51,12 +50,13 @@ class MainActivity : ComponentActivity() {
 
 /*
 steps:
-    1- implement the behavior with fixed height and no animation customization and with only one letter
-    2- add multiple items
-    3- Remove fixed height
-    4- customize animation
-    5- design better(texts, screen)
-    6- share on Github
+    - implement the behavior with fixed height and no animation customization and with only one letter
+    - add multiple items
+    - Remove fixed height
+    - customize animation
+    - (Maybe add support for comma)
+    - design better(texts, screen)
+    - share on Github
  */
 
 @Composable
@@ -66,14 +66,13 @@ fun Greeting(price: Int) {
 
     Row(
         modifier = Modifier
-            .clipToBounds()
             .height(50.dp)
     ) {
         priceCharacters.forEachIndexed { index, character ->
             key(index, character) {
                 if (character != null) {
                     Log.i("HADI", "index: $index $character")
-                    CharacterItem(character)
+                    CharacterColumn(character)
                 }
             }
         }
@@ -82,7 +81,7 @@ fun Greeting(price: Int) {
 }
 
 @Composable
-private fun CharacterItem(character: Char) {
+private fun CharacterColumn(character: Char) {
     val lazyListState = rememberLazyListState(initialFirstVisibleItemIndex = 0)
     LaunchedEffect(key1 = character) {
         lazyListState.animateScrollToItem(getCharacterIndex(character))
@@ -114,11 +113,7 @@ fun getItems(): List<String> {
 }
 
 fun getCharacterIndex(character: Char): Int {
-    return if (character.isDigit()) {
-        return character.digitToInt()
-    } else {
-        0
-    }
+    return getItems().indexOfFirst { it == character.toString() }
 }
 
 //@Preview(showBackground = true)
