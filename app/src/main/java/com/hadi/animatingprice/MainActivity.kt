@@ -18,7 +18,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.sp
 import com.hadi.animatingprice.ui.theme.AnimatingPriceTheme
 import kotlinx.coroutines.delay
@@ -66,7 +68,6 @@ fun Greeting(price: Int) {
 
     Row(
         modifier = Modifier
-            .height(50.dp)
     ) {
         priceCharacters.forEachIndexed { index, character ->
             key(index, character) {
@@ -83,12 +84,27 @@ fun Greeting(price: Int) {
 @Composable
 private fun CharacterColumn(character: Char) {
     val lazyListState = rememberLazyListState(initialFirstVisibleItemIndex = 0)
+    var lazyColumnHeight by remember {
+        mutableStateOf(Dp.Unspecified)
+    }
+    val density = LocalDensity.current
     LaunchedEffect(key1 = character) {
         lazyListState.animateScrollToItem(getCharacterIndex(character))
     }
-    LazyColumn(state = lazyListState) {
+    LazyColumn(
+        modifier = Modifier.height(lazyColumnHeight),
+        state = lazyListState,
+        userScrollEnabled = false
+    ) {
         items(items = getItems()) { item ->
-            Text(text = item, fontSize = 40.sp, modifier = Modifier.height(50.dp))
+            Text(
+                text = item, fontSize = 40.sp,
+                modifier = Modifier.onSizeChanged {
+                    lazyColumnHeight = with(density) {
+                        it.height.toDp()
+                    }
+                }
+            )
         }
     }
 }
