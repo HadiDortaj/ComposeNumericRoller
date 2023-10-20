@@ -35,12 +35,11 @@ class MainActivity : ComponentActivity() {
                 }
 
                 LaunchedEffect(key1 = Unit) {
-                    delay(1000)
-                    price = 29
-                    delay(1000)
-                    price = 329
-
-
+                    val changes = listOf(29, 21, 29, 21, 329, 29, 1)
+                    changes.forEach {
+                        delay(1000)
+                        price = it
+                    }
                 }
                 Greeting(price)
             }
