@@ -9,8 +9,8 @@ class AnimationTracker {
             }
         }
 
-    val shouldAnimate: Boolean
+    val canAnimate: Boolean
         get() = numberOfTrackedInputChanges > 0
 
-    private fun shouldTrackInputChange() = !shouldAnimate
+    private fun shouldTrackInputChange() = !canAnimate
 }
