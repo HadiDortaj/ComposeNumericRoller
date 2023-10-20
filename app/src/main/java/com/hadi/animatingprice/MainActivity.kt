@@ -4,11 +4,8 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.animation.core.EaseOutCubic
 import androidx.compose.animation.core.EaseOutExpo
-import androidx.compose.animation.core.EaseOutQuint
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.animateScrollBy
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
@@ -24,7 +21,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -38,11 +34,11 @@ class MainActivity : ComponentActivity() {
             AnimatingPriceTheme {
                 // A surface container using the 'background' color from the theme
                 var price by remember {
-                    mutableStateOf(5)
+                    mutableStateOf(2)
                 }
 
                 LaunchedEffect(key1 = Unit) {
-                    val changes = listOf(6, 0)
+                    val changes = listOf(5, 25, 29, 39, 44, 94, 0, 80)
                     changes.forEach {
                         delay(3000)
                         price = it
@@ -65,16 +61,29 @@ steps:
     - share on Github
  */
 
+data class AnimationSettings(
+    var numberOfChangedInputs: Int = 0
+) {
+    val shouldRunAnimation: Boolean
+        get() = numberOfChangedInputs > 0
+}
+
 @Composable
 fun Greeting(price: Int) {
     val priceCharacters = generateCharactersArray(price)
+    val animationSettings = remember {
+        AnimationSettings()
+    }
+    LaunchedEffect(price) {
+        animationSettings.numberOfChangedInputs++
+    }
     Row(
         modifier = Modifier
     ) {
         priceCharacters.forEachIndexed { index, character ->
             key(index) {
                 if (character != null) {
-                    CharacterColumn(character)
+                    CharacterColumn(character, animationSettings.shouldRunAnimation)
                 }
             }
         }
@@ -83,9 +92,10 @@ fun Greeting(price: Int) {
 }
 
 @Composable
-private fun CharacterColumn(character: Char) {
+private fun CharacterColumn(character: Char, shouldRunAnimation: Boolean) {
+    val initialFirstVisibleItemIndex = if (shouldRunAnimation) 0 else getCharacterIndex(character)
     val lazyListState =
-        rememberLazyListState(initialFirstVisibleItemIndex = getCharacterIndex(character))
+        rememberLazyListState(initialFirstVisibleItemIndex = initialFirstVisibleItemIndex)
     val heightInPixels = with(LocalDensity.current) {
         50.dp.toPx()
     }
@@ -101,7 +111,8 @@ private fun CharacterColumn(character: Char) {
 
     }
     LazyColumn(
-        modifier = Modifier.height(50.dp).background(Color.Yellow),
+        modifier = Modifier
+            .height(50.dp),
         state = lazyListState,
         userScrollEnabled = false
     ) {
@@ -130,7 +141,7 @@ private fun generateCharactersArray(price: Int): Array<Char?> {
 }
 
 fun getItems(): List<String> {
-    return listOf(*(0..9).map { it.toString() }.toTypedArray())
+    return listOf("", *(0..9).map { it.toString() }.toTypedArray())
 }
 
 fun getCharacterIndex(character: Char): Int {
