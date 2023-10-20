@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hadi.animatingprice.ui.theme.AnimatingPriceTheme
 import kotlinx.coroutines.delay
+import java.lang.Integer.max
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,13 +39,13 @@ class MainActivity : ComponentActivity() {
                 }
 
                 LaunchedEffect(key1 = Unit) {
-                    val changes = listOf(5, 25, 29, 39, 44, 94, 0, 80)
+                    val changes = listOf(12)
                     changes.forEach {
                         delay(3000)
                         price = it
                     }
                 }
-                Greeting(price)
+                DigitWheel(price)
             }
         }
     }
@@ -61,21 +62,15 @@ steps:
     - share on Github
  */
 
-data class AnimationSettings(
-    var numberOfChangedInputs: Int = 0
-) {
-    val shouldRunAnimation: Boolean
-        get() = numberOfChangedInputs > 0
-}
 
 @Composable
-fun Greeting(price: Int) {
-    val priceCharacters = generateCharactersArray(price)
-    val animationSettings = remember {
-        AnimationSettings()
+fun DigitWheel(number: Int) {
+    val priceCharacters = generateDigitsArray(number)
+    val animationTracker = remember {
+        AnimationTracker()
     }
-    LaunchedEffect(price) {
-        animationSettings.numberOfChangedInputs++
+    LaunchedEffect(number) {
+        animationTracker.numberOfTrackedInputChanges++
     }
     Row(
         modifier = Modifier
@@ -83,7 +78,10 @@ fun Greeting(price: Int) {
         priceCharacters.forEachIndexed { index, character ->
             key(index) {
                 if (character != null) {
-                    CharacterColumn(character, animationSettings.shouldRunAnimation)
+                    CharacterColumn(
+                        character = character,
+                        shouldAnimate = animationTracker.shouldAnimate
+                    )
                 }
             }
         }
@@ -92,8 +90,8 @@ fun Greeting(price: Int) {
 }
 
 @Composable
-private fun CharacterColumn(character: Char, shouldRunAnimation: Boolean) {
-    val initialFirstVisibleItemIndex = if (shouldRunAnimation) 0 else getCharacterIndex(character)
+private fun CharacterColumn(character: Char, shouldAnimate: Boolean) {
+    val initialFirstVisibleItemIndex = if (shouldAnimate) 0 else getCharacterIndex(character)
     val lazyListState =
         rememberLazyListState(initialFirstVisibleItemIndex = initialFirstVisibleItemIndex)
     val heightInPixels = with(LocalDensity.current) {
@@ -126,18 +124,19 @@ private fun CharacterColumn(character: Char, shouldRunAnimation: Boolean) {
 }
 
 @Composable
-private fun generateCharactersArray(price: Int): Array<Char?> {
-    val charactersArray = price.toString().toCharArray()
-    val supportedCharacters = 10
-    val modifiedArray = Array(supportedCharacters) { index ->
-        val sizeDiff = supportedCharacters - charactersArray.size
+private fun generateDigitsArray(price: Int): Array<Char?> {
+    val rawDigitsArray = price.toString().toCharArray()
+    val minSupportedDigitsCount = 10
+    val digitsCount = max(minSupportedDigitsCount, rawDigitsArray.size)
+    val digitsArray = Array(digitsCount) { index ->
+        val sizeDiff = digitsCount - rawDigitsArray.size
         if (index >= sizeDiff) {
-            charactersArray[index - sizeDiff]
+            rawDigitsArray[index - sizeDiff]
         } else {
             null
         }
     }
-    return modifiedArray
+    return digitsArray
 }
 
 fun getItems(): List<String> {
@@ -147,11 +146,3 @@ fun getItems(): List<String> {
 fun getCharacterIndex(character: Char): Int {
     return getItems().indexOfFirst { it == character.toString() }
 }
-
-//@Preview(showBackground = true)
-//@Composable
-//fun GreetingPreview() {
-//    AnimatingPriceTheme {
-//        Greeting(4)
-//    }
-//}
