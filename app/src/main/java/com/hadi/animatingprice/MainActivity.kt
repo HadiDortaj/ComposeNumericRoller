@@ -4,6 +4,12 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.core.EaseOutCubic
+import androidx.compose.animation.core.EaseOutExpo
+import androidx.compose.animation.core.EaseOutQuint
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.animateScrollBy
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
@@ -18,6 +24,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -31,13 +38,13 @@ class MainActivity : ComponentActivity() {
             AnimatingPriceTheme {
                 // A surface container using the 'background' color from the theme
                 var price by remember {
-                    mutableStateOf(23)
+                    mutableStateOf(5)
                 }
 
                 LaunchedEffect(key1 = Unit) {
-                    val changes = listOf(29, 21, 29, 21, 329, 29, 1)
+                    val changes = listOf(6, 0)
                     changes.forEach {
-                        delay(1000)
+                        delay(3000)
                         price = it
                     }
                 }
@@ -67,7 +74,6 @@ fun Greeting(price: Int) {
         priceCharacters.forEachIndexed { index, character ->
             key(index) {
                 if (character != null) {
-                    Log.i("HADI", "index: $index $character")
                     CharacterColumn(character)
                 }
             }
@@ -78,19 +84,31 @@ fun Greeting(price: Int) {
 
 @Composable
 private fun CharacterColumn(character: Char) {
-    val lazyListState = rememberLazyListState(initialFirstVisibleItemIndex = 0)
+    val lazyListState =
+        rememberLazyListState(initialFirstVisibleItemIndex = getCharacterIndex(character))
+    val heightInPixels = with(LocalDensity.current) {
+        50.dp.toPx()
+    }
     LaunchedEffect(key1 = character) {
-        lazyListState.animateScrollToItem(getCharacterIndex(character))
+        val index = getCharacterIndex(character = character)
+        val diff = index - lazyListState.firstVisibleItemIndex
+        val value = diff * heightInPixels
+        Log.i(
+            "HADI",
+            "character: $character first: ${lazyListState.firstVisibleItemIndex} index: $index diff: $diff value: $value height: $heightInPixels"
+        )
+        lazyListState.animateScrollBy(value = value, tween(1000, easing = EaseOutExpo))
+
     }
     LazyColumn(
-        modifier = Modifier.height(50.dp),
+        modifier = Modifier.height(50.dp).background(Color.Yellow),
         state = lazyListState,
         userScrollEnabled = false
     ) {
         items(items = getItems()) { item ->
             Text(
                 text = item, fontSize = 40.sp,
-                modifier = Modifier
+                modifier = Modifier.height(50.dp)
             )
         }
     }
