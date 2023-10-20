@@ -1,4 +1,4 @@
-package com.hadi.animatingprice
+package com.hadi.numberwheel
 
 import androidx.compose.animation.core.EaseOutExpo
 import androidx.compose.animation.core.TweenSpec

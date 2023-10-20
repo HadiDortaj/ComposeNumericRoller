@@ -1,4 +1,4 @@
-package com.hadi.animatingprice.ui.theme
+package com.hadi.numberwheel.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

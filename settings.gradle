@@ -13,5 +13,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "AnimatingPrice"
+rootProject.name = "NumberWheel"
 include ':app'

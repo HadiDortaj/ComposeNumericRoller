@@ -1,4 +1,4 @@
-package com.hadi.animatingprice
+package com.hadi.numberwheel
 
 import org.junit.Test
 

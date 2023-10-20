@@ -1,4 +1,4 @@
-package com.hadi.animatingprice
+package com.hadi.numberwheel
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.runtime.Composable

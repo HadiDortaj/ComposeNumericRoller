@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace 'com.hadi.animatingprice'
+    namespace 'com.hadi.numberwheel'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.hadi.animatingprice"
+        applicationId "com.hadi.numberwheel"
         minSdk 21
         targetSdk 33
         versionCode 1

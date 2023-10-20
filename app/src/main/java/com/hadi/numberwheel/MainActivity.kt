@@ -1,4 +1,4 @@
-package com.hadi.animatingprice
+package com.hadi.numberwheel
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -8,14 +8,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import com.hadi.animatingprice.ui.theme.AnimatingPriceTheme
+import com.hadi.numberwheel.ui.theme.NumberWheelTheme
 import kotlinx.coroutines.delay
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            AnimatingPriceTheme {
+            NumberWheelTheme {
                 var price by remember {
                     mutableStateOf(2)
                 }
