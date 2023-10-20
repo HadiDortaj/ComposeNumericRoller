@@ -6,6 +6,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
 fun NumberWheel(number: Int, modifier: Modifier = Modifier) {
@@ -50,3 +51,8 @@ private fun generateDigitsArray(price: Int): Array<Char?> {
     return digitsArray
 }
 
+@Preview
+@Composable
+private fun NumberWheelPreview() {
+    NumberWheel(2300)
+}

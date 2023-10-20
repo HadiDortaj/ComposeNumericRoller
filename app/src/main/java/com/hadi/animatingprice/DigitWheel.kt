@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -77,4 +78,10 @@ private fun getDigitIndex(digit: Char): Int {
 
 private fun getAnimationSpec(): TweenSpec<Float> {
     return tween(ANIMATION_DURATION_IN_MILLIS, easing = EaseOutExpo)
+}
+
+@Preview
+@Composable
+private fun DigitWheelPreview() {
+    DigitWheel(digit = '9', canAnimate = false)
 }
