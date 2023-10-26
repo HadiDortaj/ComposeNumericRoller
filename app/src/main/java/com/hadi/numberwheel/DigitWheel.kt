@@ -1,86 +1,69 @@
 package com.hadi.numberwheel
 
-import androidx.compose.animation.core.EaseOutExpo
-import androidx.compose.animation.core.TweenSpec
-import androidx.compose.animation.core.tween
-import androidx.compose.foundation.gestures.animateScrollBy
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-
-private const val EMPTY_ITEM_INDEX = 0
-private const val ANIMATION_DURATION_IN_MILLIS = 2000
-private val DIGIT_HEIGHT = 80.dp
 
 @Composable
 fun DigitWheel(digit: Char, canAnimate: Boolean, modifier: Modifier = Modifier) {
-    val initialFirstVisibleItemIndex = if (canAnimate) EMPTY_ITEM_INDEX else getDigitIndex(digit)
-    val lazyListState =
-        rememberLazyListState(initialFirstVisibleItemIndex = initialFirstVisibleItemIndex)
-
-    val digitHeightInPixels = with(LocalDensity.current) {
-        DIGIT_HEIGHT.toPx()
-    }
-
-    LaunchedEffect(key1 = digit) {
-        val scrollValue = calculateScrollValue(
-            digit = digit,
-            firstVisibleItemIndex = lazyListState.firstVisibleItemIndex,
-            digitHeightInPixels = digitHeightInPixels
-        )
-        lazyListState.animateScrollBy(
-            value = scrollValue,
-            animationSpec = getAnimationSpec()
-        )
-    }
-
-    LazyColumn(
-        modifier = modifier.height(DIGIT_HEIGHT),
-        state = lazyListState,
-        userScrollEnabled = false
-    ) {
-        items(items = getWheelItems()) { item ->
-            Text(
-                text = item, fontSize = 60.sp,
-                modifier = Modifier.height(DIGIT_HEIGHT).width(50.dp),
-                color = Color(0xffBC9E4C),
-                style = TextStyle(
-                    fontFamily = FontFamily(
-                        Font(
-                            R.font.libre_baskerville_regular,
-                            FontWeight.Normal
-                        )
-                    )
-                )
-            )
+    val wheelScrollState = rememberWheelScrollState()
+    LaunchedEffect(key1 = digit, key2 = canAnimate) {
+        val index = getDigitIndex(digit)
+        if (canAnimate) {
+            wheelScrollState.animateScrollToIndex(index)
+        } else {
+            wheelScrollState.scrollToIndex(index)
         }
     }
-}
 
-private fun calculateScrollValue(
-    digit: Char,
-    firstVisibleItemIndex: Int,
-    digitHeightInPixels: Float
-): Float {
-    val digitIndex = getDigitIndex(digit = digit)
-    val diff = digitIndex - firstVisibleItemIndex
-    val scrollValue = diff * digitHeightInPixels
-    return scrollValue
+    Layout(measurePolicy = { measurables, constraints ->
+        val placeableList = measurables.map {
+            val placeable = it.measure(constraints)
+            placeable
+        }
+        val maxMeasuredHeight = placeableList.map { it.height }.max()
+        val maxMeasuredWidth = placeableList.map { it.width }.max()
+
+        wheelScrollState.updateItemHeight(maxMeasuredHeight)
+
+        layout(maxMeasuredWidth, maxMeasuredHeight) {
+            var height = wheelScrollState.value
+            placeableList.forEach {
+                it.placeRelative(
+                        (maxMeasuredWidth - it.width) / 2,
+                        height + ((maxMeasuredHeight - it.height) / 2)
+                )
+                height += maxMeasuredHeight
+            }
+        }
+    }, content = {
+        getWheelItems().forEach { character ->
+            Text(
+                    text = character, fontSize = 60.sp,
+                    modifier = Modifier,
+                    color = Color(0xffBC9E4C),
+                    style = TextStyle(
+                            fontFamily = FontFamily(
+                                    Font(
+                                            R.font.libre_baskerville_regular,
+                                            FontWeight.Normal
+                                    )
+                            )
+                    )
+            )
+        }
+    }, modifier = modifier.clipToBounds())
 }
 
 private fun getWheelItems(): List<String> {
@@ -91,12 +74,8 @@ private fun getDigitIndex(digit: Char): Int {
     return getWheelItems().indexOfFirst { it == digit.toString() }
 }
 
-private fun getAnimationSpec(): TweenSpec<Float> {
-    return tween(ANIMATION_DURATION_IN_MILLIS, easing = EaseOutExpo)
-}
-
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun DigitWheelPreview() {
-    DigitWheel(digit = '9', canAnimate = false)
+    DigitWheel(digit = '8', canAnimate = false)
 }
