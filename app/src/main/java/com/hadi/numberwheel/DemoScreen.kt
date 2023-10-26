@@ -26,7 +26,7 @@ fun DemoScreen() {
             mutableStateOf(123456)
         }
         LaunchedEffect(key1 = Unit) {
-            val changes = listOf(654321, 123456, 123458, 123398, 423398, 411398, 123456)
+            val changes = listOf(654321, 123456, 123458, 123398, 423398, 411398, 123456, 23456)
             delay(1000)
             while (true) {
                 changes.forEach {
