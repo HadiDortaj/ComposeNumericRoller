@@ -11,22 +11,20 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
+import com.hadi.numberwheel.ui.theme.Alabaster
 import kotlinx.coroutines.delay
 
 @Composable
 fun DemoScreen() {
-    Box(
-        modifier = Modifier
+    Box(modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xffF1EBE3))
+            .background(Alabaster)
     ) {
         var number by remember {
             mutableStateOf(123456)
         }
         LaunchedEffect(key1 = Unit) {
-            val changes = listOf(654321, 123456, 123458, 123398, 423398, 411398, 123456, 23456)
+            val changes = listOf(654321, 123456, 123458, 123398, 423398, 469398, 123456)
             delay(1000)
             while (true) {
                 changes.forEach {
@@ -39,8 +37,8 @@ fun DemoScreen() {
     }
 }
 
-@Preview
+@AppPreview
 @Composable
-private fun MainScreenPreview() {
+private fun DemoScreenPreview() {
     DemoScreen()
 }

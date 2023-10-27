@@ -11,7 +11,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.LayoutDirection
 
@@ -28,11 +27,8 @@ fun NumberWheel(number: Int, modifier: Modifier = Modifier) {
 
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
         Row(modifier = modifier.animateContentSize(getSizeChangeAnimationSpec())) {
-            digitsArray.forEachIndexed { index, character ->
-                DigitWheel(
-                        digit = character,
-                        canAnimate = animationTracker.canAnimate
-                )
+            digitsArray.forEach {character ->
+                DigitWheel(digit = character, canAnimate = animationTracker.canAnimate)
             }
         }
     }
@@ -49,7 +45,7 @@ private fun generateDigitsArray(price: Int): CharArray {
     return rawDigitsArray
 }
 
-@Preview
+@AppPreview
 @Composable
 private fun NumberWheelPreview() {
     NumberWheel(2300)

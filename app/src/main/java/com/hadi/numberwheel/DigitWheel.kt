@@ -3,17 +3,15 @@ package com.hadi.numberwheel
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import com.hadi.numberwheel.ui.theme.AztecGold
 
 @Composable
 fun DigitWheel(digit: Char, canAnimate: Boolean, modifier: Modifier = Modifier) {
@@ -50,21 +48,19 @@ fun DigitWheel(digit: Char, canAnimate: Boolean, modifier: Modifier = Modifier) 
     }, content = {
         getWheelItems().forEach { character ->
             Text(
-                    text = character, fontSize = 60.sp,
+                    text = character,
+                    fontSize = 60.sp,
                     modifier = Modifier,
-                    color = Color(0xffBC9E4C),
-                    style = TextStyle(
-                            fontFamily = FontFamily(
-                                    Font(
-                                            R.font.libre_baskerville_regular,
-                                            FontWeight.Normal
-                                    )
-                            )
-                    )
+                    color = AztecGold,
+                    style = getCharacterTextStyle()
             )
         }
     }, modifier = modifier.clipToBounds())
 }
+
+@Composable
+private fun getCharacterTextStyle() =
+        TextStyle(fontFamily = FontFamily(Font(R.font.libre_baskerville_regular, FontWeight.Normal)))
 
 private fun getWheelItems(): List<String> {
     return listOf("", *(0..9).map { it.toString() }.toTypedArray())
@@ -74,7 +70,7 @@ private fun getDigitIndex(digit: Char): Int {
     return getWheelItems().indexOfFirst { it == digit.toString() }
 }
 
-@Preview(showBackground = true)
+@AppPreview
 @Composable
 private fun DigitWheelPreview() {
     DigitWheel(digit = '8', canAnimate = false)
