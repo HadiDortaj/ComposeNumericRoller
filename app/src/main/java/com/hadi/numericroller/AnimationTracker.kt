@@ -1,7 +1,6 @@
-package com.hadi.numberwheel
+package com.hadi.numericroller
 
 class AnimationTracker {
-
     var numberOfTrackedInputChanges: Int = 0
         set(value) {
             if (shouldTrackInputChange()) {

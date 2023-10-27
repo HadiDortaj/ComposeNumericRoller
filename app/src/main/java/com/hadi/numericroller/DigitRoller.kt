@@ -1,4 +1,4 @@
-package com.hadi.numberwheel
+package com.hadi.numericroller
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -11,10 +11,10 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import com.hadi.numberwheel.ui.theme.AztecGold
+import com.hadi.numericroller.ui.theme.AztecGold
 
 @Composable
-fun DigitWheel(digit: Char, canAnimate: Boolean, modifier: Modifier = Modifier) {
+fun DigitRoller(digit: Char, canAnimate: Boolean, modifier: Modifier = Modifier) {
     val wheelScrollState = rememberWheelScrollState()
     LaunchedEffect(key1 = digit, key2 = canAnimate) {
         val index = getDigitIndex(digit)
@@ -73,5 +73,5 @@ private fun getDigitIndex(digit: Char): Int {
 @AppPreview
 @Composable
 private fun DigitWheelPreview() {
-    DigitWheel(digit = '8', canAnimate = false)
+    DigitRoller(digit = '8', canAnimate = false)
 }

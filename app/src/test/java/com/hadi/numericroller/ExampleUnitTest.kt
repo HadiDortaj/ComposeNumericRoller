@@ -1,4 +1,4 @@
-package com.hadi.numberwheel
+package com.hadi.numericroller
 
 import org.junit.Test
 

@@ -1,4 +1,4 @@
-package com.hadi.numberwheel
+package com.hadi.numericroller
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.EaseOutExpo
@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.LayoutDirection
 
 @Composable
-fun NumberWheel(number: Int, modifier: Modifier = Modifier) {
+fun NumericRoller(number: Int, modifier: Modifier = Modifier) {
     val digitsArray = generateDigitsArray(number)
     val animationTracker = remember {
         AnimationTracker()
@@ -28,7 +28,7 @@ fun NumberWheel(number: Int, modifier: Modifier = Modifier) {
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
         Row(modifier = modifier.animateContentSize(getSizeChangeAnimationSpec())) {
             digitsArray.forEach {character ->
-                DigitWheel(digit = character, canAnimate = animationTracker.canAnimate)
+                DigitRoller(digit = character, canAnimate = animationTracker.canAnimate)
             }
         }
     }
@@ -47,6 +47,6 @@ private fun generateDigitsArray(price: Int): CharArray {
 
 @AppPreview
 @Composable
-private fun NumberWheelPreview() {
-    NumberWheel(2300)
+private fun NumericRollerPreview() {
+    NumericRoller(2300)
 }

@@ -1,4 +1,4 @@
-package com.hadi.numberwheel
+package com.hadi.numericroller
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationSpec

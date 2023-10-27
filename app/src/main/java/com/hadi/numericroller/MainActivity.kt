@@ -1,4 +1,4 @@
-package com.hadi.numberwheel
+package com.hadi.numericroller
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

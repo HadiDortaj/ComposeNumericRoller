@@ -1,4 +1,4 @@
-package com.hadi.numberwheel
+package com.hadi.numericroller
 
 import androidx.compose.ui.tooling.preview.Preview
 

@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace 'com.hadi.numberwheel'
+    namespace 'com.hadi.numericroller'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.hadi.numberwheel"
+        applicationId "com.hadi.numericroller"
         minSdk 21
         targetSdk 33
         versionCode 1

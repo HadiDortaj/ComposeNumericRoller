@@ -1,4 +1,4 @@
-package com.hadi.numberwheel
+package com.hadi.numericroller
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -11,7 +11,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.hadi.numberwheel.ui.theme.Alabaster
+import com.hadi.numericroller.ui.theme.Alabaster
 import kotlinx.coroutines.delay
 
 @Composable
@@ -33,7 +33,7 @@ fun DemoScreen() {
                 }
             }
         }
-        NumberWheel(number = number, modifier = Modifier.align(Alignment.Center))
+        NumericRoller(number = number, modifier = Modifier.align(Alignment.Center))
     }
 }
 
